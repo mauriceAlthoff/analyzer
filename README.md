@@ -1,7 +1,7 @@
-# 4c-project-structure
+# analyzer-project-structure
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
-[![Continuous Integration](https://github.com/hyahiaoui/4c-project-structure/actions/workflows/ci.yml/badge.svg)](https://github.com/hyahiaoui/4c-project-structure/actions/workflows/ci.yml)
+[![Continuous Integration](https://github.com/mauriceAlthoff/analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/mauriceAlthoff/analyzer/actions/workflows/ci.yml)
 
 ## Summary
 
@@ -27,12 +27,6 @@ This project requires:
  * The [Cmake](https://cmake.org) tools family,
  * The [Conan](https://conan.io) packages manager.
  * The tools and libraries described in the `conanfile.txt` file.
-
-On macOS, `clang` is the default build system. Install the other requirements (using the [brew](https://brew.sh) packages manager), by issuing the following command:
-
-```
-$ brew install cmake conan
-```
 
 On linux (Ubuntu and debian-flavor distribution), issue the following commands (this requires the installation of the [pip](https://pip.pypa.io/en/stable/) packages manages):
 
