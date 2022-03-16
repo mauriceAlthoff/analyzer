@@ -63,7 +63,7 @@ function app-test
 
         make -j
 
-        ./test/bin/4c-project-structure_test
+        ./test/bin/analyzer_test
     )
 }
 

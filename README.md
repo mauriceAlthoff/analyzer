@@ -61,14 +61,14 @@ conanfile.txt: Installing package
 
 ...
 
-[ 28%] Built target 4c-project-structure_lib
-[ 57%] Building CXX object app/CMakeFiles/4c-project-structure_run.dir/main.cpp.o
-[ 57%] Building CXX object test/CMakeFiles/4c-project-structure_test.dir/TestDummy.cpp.o
-[ 71%] Building CXX object test/CMakeFiles/4c-project-structure_test.dir/main.cpp.o
-[ 85%] Linking CXX executable bin/4c-project-structure_run
-[ 85%] Built target 4c-project-structure_run
-[100%] Linking CXX executable bin/4c-project-structure_test
-[100%] Built target 4c-project-structure_test
+[ 28%] Built target analyzer_lib
+[ 57%] Building CXX object app/CMakeFiles/analyzer_run.dir/main.cpp.o
+[ 57%] Building CXX object test/CMakeFiles/analyzer_test.dir/TestDummy.cpp.o
+[ 71%] Building CXX object test/CMakeFiles/analyzer_test.dir/main.cpp.o
+[ 85%] Linking CXX executable bin/analyzer_run
+[ 85%] Built target analyzer_run
+[100%] Linking CXX executable bin/analyzer_test
+[100%] Built target analyzer_test
 + exit 0
 ```
 
@@ -80,8 +80,8 @@ This target will:
 
 The resulting artifacts are to be found in the `build` folder:
 
- * the application's executable `build/app/bin/4c-project-structure_run` 
- * the tests executable `build/test/bin/4c-project-structure_test`
+ * the application's executable `build/app/bin/analyzer_run` 
+ * the tests executable `build/test/bin/analyzer_test`
 
 ### Tests
 
@@ -89,9 +89,9 @@ Run the tests using
 
 ```bash
 $ ./scripts/entrypoint.sh test
-[ 28%] Built target 4c-project-structure_lib
-[ 57%] Built target 4c-project-structure_run
-[100%] Built target 4c-project-structure_test
+[ 28%] Built target analyzer_lib
+[ 57%] Built target analyzer_run
+[100%] Built target analyzer_test
 ===============================================================================
 All tests passed (1 assertion in 1 test case)
 ```
@@ -99,7 +99,7 @@ All tests passed (1 assertion in 1 test case)
 Or, using
 
 ```bash
-$ ./build/test/bin/4c-project-structure_test
+$ ./build/test/bin/analyzer_test
 ===============================================================================
 All tests passed (1 assertion in 1 test case)
 ```
@@ -146,11 +146,11 @@ First, create the Docker image that will be used to run the following operations
 ```bash
 $ make dckr-image
  make dckr-image
-docker-compose build --pull 4c-project
-Building 4c-project
+docker-compose build --pull analyzer
+Building analyzer
 ...
  => => writing image sha256:c31d379e2c6e8b1c27a485b1e209f2365075d497e804d7cd65164f8310c9c07a       0.0s
- => => naming to docker.io/library/4c-project-structure_4c-project                                 0.0s
+ => => naming to docker.io/library/analyzer-project                                                0.0s
 ```
 
 ### Compiling
@@ -159,18 +159,16 @@ Use the Makefile `dckr-build`  target to build the application and its tests wit
 
 ```bash
 $ make dckr-build 
-docker-compose run --rm 4c-project build
-Creating 4c-project-structure_4c-project_run ... done
+docker-compose run --rm analyzer build
+Creating analyzer             ... done
 
 ...
 ```
 
 The resulting artifacts are to be found in the `build` folder:
 
- * the application's executable `build/app/bin/4c-project-structure_run` 
- * the tests executable `build/test/bin/4c-project-structure_test`
-
-> On MacOS, these artifacts will not run in the host, as they were compiled within Docker container, thus they are buit for Linux.
+ * the application's executable `build/app/bin/analyzer_run` 
+ * the tests executable `build/test/bin/analyzer_test`
 
 ### Tests
 
@@ -178,9 +176,9 @@ Run the tests using
 
 ```bash
 $ make dckr-test
-[ 28%] Built target 4c-project-structure_lib
-[ 57%] Built target 4c-project-structure_run
-[100%] Built target 4c-project-structure_test
+[ 28%] Built target analyzer_lib
+[ 57%] Built target analyzer_run
+[100%] Built target analyzer_test
 ===============================================================================
 All tests passed (1 assertion in 1 test case)
 ```
@@ -191,8 +189,8 @@ Remove the buiding artifacts using
 
 ```bash
 $ make dckr-clean
-docker-compose run --rm 4c-project clean
-Creating 4c-project-structure_4c-project_run ... done
+docker-compose run --rm analyzer clean
+Creating analyzer        _run ... done
 ```
 
 ### Code formatting

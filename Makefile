@@ -8,18 +8,18 @@ help:
 #######################################
 .PHONY: dckr-image
 dckr-image:	## Builds the Docker image for building, developing and testing
-	docker-compose build --pull 4c-project
+	docker-compose build --pull analyzer
 
 .PHONY: dckr-shell
 dckr-shell:	## Spawns a `bash` shell within a Docker container
-	docker-compose run --rm 4c-project shell
+	docker-compose run --rm analyzer shell
 
 #######################################
 # Compilation targets
 #######################################
 .PHONY: dckr-build
 dckr-build:	## Builds application and tests executables, within a Docker container
-	docker-compose run --rm 4c-project build
+	docker-compose run --rm analyzer build
 
 .PHONY: build
 build:		## Builds application and tests executables
@@ -30,7 +30,7 @@ build:		## Builds application and tests executables
 #######################################
 .PHONY: dckr-test
 dckr-test:	## Run application tests, within a Docker container
-	docker-compose run --rm 4c-project test
+	docker-compose run --rm analyzer test
 
 .PHONY: test
 test:		## Run application tests
@@ -41,7 +41,7 @@ test:		## Run application tests
 #######################################
 .PHONY: dckr-format
 dckr-format:## Formats C++ code using clang-format (with Webkit style, by default), within a Docker container
-	docker-compose run --rm 4c-project format
+	docker-compose run --rm analyzer format
 
 .PHONY: format
 format:		## Formats C++ code using clang-format (with Webkit style, by default)
@@ -52,7 +52,7 @@ format:		## Formats C++ code using clang-format (with Webkit style, by default)
 #######################################
 .PHONY: dckr-clean
 dckr-clean:	## Removes building artifacts, within a Docker container
-	docker-compose run --rm 4c-project clean
+	docker-compose run --rm analyzer clean
 
 .PHONY: clean
 clean:		## Removes building artifacts

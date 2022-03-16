@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16.3)
 
-project(4c-project-structure)
+project(analyzer)
 
 include(build/conanbuildinfo.cmake)
 
