@@ -1,6 +1,6 @@
 #include "catch2/catch.hpp"
 
-#include "Dummy.h"
+#include "Dummy.hpp"
 
 SCENARIO("Dummy section")
 {
