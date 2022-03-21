@@ -1,4 +1,4 @@
-FROM    ubuntu:21.04
+FROM    ubuntu:20.04
 
 # Skip tzdata (required by ) installation questions, by setting ...
 ENV     DEBIAN_FRONTEND=noninteractive
