@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
+#include <vector>
+#include <memory>
 
 using namespace boost::program_options;
 
@@ -15,8 +17,8 @@ class Top_Ten_Component;
 
 class Visitor {
  public:
-  virtual void output_start_pos_smileys(const Smiley_Component *element) const = 0;
-  virtual void output_top_ten_words(const Top_Ten_Component *element) const = 0;
+  virtual void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const = 0;
+  virtual void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const = 0;
 };
 
 /**
@@ -26,8 +28,12 @@ class Visitor {
 
 class Component {
  public:
+  Component(const std::string& text):m_text(text){}
   virtual ~Component() {}
-  virtual void compute(Visitor *visitor) const = 0;
+  virtual void compute(const std::shared_ptr<Visitor> visitor) const = 0;
+  const std::string& get_text() const{return m_text;}
+protected:
+  std::string m_text;  
 };
 
 /**
@@ -36,51 +42,53 @@ class Component {
  */
 class Smiley_Component : public Component {
  public:
-  void compute(Visitor *visitor) const override {
-    visitor->output_start_pos_smileys(this);
+  Smiley_Component(const std::string& text):Component(text){}
+  void compute(std::shared_ptr<Visitor> visitor) const override {
+    visitor->output_start_pos_smileys(std::make_shared<Smiley_Component> (m_text));
   }
   std::string compute_start_pos_smileys() const {
-    return "smileys";
+    return "smileys " + m_text;
   }
 };
 
 class Top_Ten_Component : public Component {
  public:
-  void compute(Visitor *visitor) const override {
-    visitor->output_top_ten_words(this);
+  Top_Ten_Component(const std::string& text):Component(text){}
+  void compute(std::shared_ptr<Visitor> visitor) const override {
+    visitor->output_top_ten_words(std::make_shared<Top_Ten_Component> (m_text));
   }
   std::string compute_top_ten_words() const {
-    return "top ten";
+    return "top ten " + m_text;
   }
 };
 
 class StandarOutput : public Visitor {
  public:
-  void output_start_pos_smileys(const Smiley_Component *element) const override {
+  void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override {
     std::cout << element->compute_start_pos_smileys() << " + Standard Output\n";
   }
 
-  void output_top_ten_words(const Top_Ten_Component *element) const override {
+  void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override {
     std::cout << element->compute_top_ten_words() << " + Standard Output\n";
   }
 };
 
 class SimpleOutput : public Visitor {
  public:
-  void output_start_pos_smileys(const Smiley_Component *element) const override {
+  void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override {
     std::cout << element->compute_start_pos_smileys() << " + Simple Output\n";
   }
-  void output_top_ten_words(const Top_Ten_Component *element) const override {
+  void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override {
     std::cout << element->compute_top_ten_words() << " + Simple Output\n";
   }
 };
 
 class XmlOutput : public Visitor {
  public:
-  void output_start_pos_smileys(const Smiley_Component *element) const override {
+  void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override {
     std::cout << element->compute_start_pos_smileys() << " + XML Output\n";
   }
-  void output_top_ten_words(const Top_Ten_Component *element) const override {
+  void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override {
     std::cout << element->compute_top_ten_words() << " + XML Output\n";
   }
 };
@@ -113,33 +121,30 @@ private:
  * figuring out their concrete classes. The accept operation directs a call to
  * the appropriate operation in the visitor object.
  */
-void ClientCode(std::array<const Component *, 2> components, Visitor *visitor) {
-  for (const Component *comp : components) {
-    comp->compute(visitor);
-  }
+void ClientCode(const std::vector<std::shared_ptr<Component>>& components,
+		std::shared_ptr<Visitor> visitor) {
+  std::for_each (components.begin(),
+		 components.end(),
+		 [visitor](auto com){com->compute(visitor);});
 }
 
 int main(int argc, const char* argv[])
 {
-  std::array<const Component *, 2> components = {new Smiley_Component, new Top_Ten_Component};
+  std::vector<std::shared_ptr<Component>> components =
+    {std::make_shared<Smiley_Component>("hello World"),
+     std::make_shared<Top_Ten_Component>("hello Top Ten")};
+  
   std::cout << "The client code works with all visitors via the base Visitor interface:\n";
-  StandarOutput *visitor1 = new StandarOutput;
+  auto visitor1 = std::make_shared<StandarOutput>();
   ClientCode(components, visitor1);
   std::cout << "\n";
   std::cout << "It allows the same client code to work with different types of visitors:\n";
-  SimpleOutput *visitor2 = new SimpleOutput;
+  auto visitor2 = std::make_shared<SimpleOutput>();
   ClientCode(components, visitor2);
   std::cout << "\n";
   std::cout << "It allows the same client code to work with different types of visitors:\n";
-  XmlOutput *visitor3 = new XmlOutput;
+  auto visitor3 = std::make_shared<XmlOutput>();
   ClientCode(components, visitor3);
-
-  for (const Component *comp : components) {
-    delete comp;
-  }
-  delete visitor1;
-  delete visitor2;
-  delete visitor3;
   
     try {
       //step 0 parse arguments
@@ -173,9 +178,6 @@ int main(int argc, const char* argv[])
     } catch (const error& ex) {
         std::cerr << ex.what() << '\n';
     }
-
     
     return 0;
 }
-
-
