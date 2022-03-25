@@ -5,6 +5,9 @@
 #include <vector>
 #include <memory>
 #include <regex>
+#include <boost/algorithm/string.hpp>
+//#include <ranges>
+//#include <string_view>
 
 using namespace boost::program_options;
 
@@ -59,8 +62,22 @@ class Top_Ten_Component : public Component {
   void compute(std::shared_ptr<Visitor> visitor) const override {
     visitor->output_top_ten_words(std::make_shared<Top_Ten_Component> (m_text));
   }
-  std::string compute_top_ten_words() const {
-    return "top ten " + m_text;
+  std::map<int, std::vector<std::string>, std::greater<int>> compute_top_ten_words() const {
+    std::map<std::string, int> duplicate;
+    std::map<int, std::vector<std::string>, std::greater<int>> score_list;
+    std::vector<std::string> results;
+    boost::split(results, m_text, boost::is_any_of("\t \n"));
+    // for c++ 20
+    // auto splitText = m_text | view::split(' ') | ranges::to<std::vector<std::string>>();
+    std::sort(std::begin(results),std::end(results));
+
+    for(std::string word : results)
+        ++duplicate[word];
+    
+    for(auto [key, value] : duplicate)
+      score_list[value].push_back(key);
+
+    return score_list;
   }
 };
 
@@ -73,7 +90,14 @@ class StandarOutput : public Visitor {
   }
 
   void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override {
-    std::cout << element->compute_top_ten_words() << " + Standard Output\n";
+    auto top_ten_list = element->compute_top_ten_words();
+    for(auto [count, words]: top_ten_list){
+      std::cout << count << " times: ";
+      for (auto i: words) {std::cout << i << " ";}
+      std::cout << "\n";
+    }
+
+    std::cout << "Standard Output\n";
   }
 };
 
@@ -85,7 +109,14 @@ class SimpleOutput : public Visitor {
       std::cout << result->size()  << " + Simple Output\n";
   }
   void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override {
-    std::cout << element->compute_top_ten_words() << " + Simple Output\n";
+    auto top_ten_list = element->compute_top_ten_words();
+    for(auto [count, words]: top_ten_list){
+      std::cout << count << " times: ";
+      for (auto i: words) {std::cout << i << " ";}
+      std::cout << "\n";
+    }
+
+    std::cout << "Simple Output\n";
   }
 };
 
@@ -97,7 +128,14 @@ class XmlOutput : public Visitor {
       std::cout << result->size()  << " + XML Output\n";
   }
   void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override {
-    std::cout << element->compute_top_ten_words() << " + XML Output\n";
+    auto top_ten_list = element->compute_top_ten_words();
+    for(auto [count, words]: top_ten_list){
+      std::cout << count << " times: ";
+      for (auto i: words) {std::cout << i << " ";}
+      std::cout << "\n";
+    }
+
+    std::cout << "XML Output\n";
   }
 };
 
@@ -158,7 +196,7 @@ int main(int argc, const char* argv[])
 
     //step 2 apply algorithm
     std::vector<std::shared_ptr<Component>> components =
-      {std::make_shared<Smiley_Component>(":\\hello:-] :{World:-[ :/ :)"),
+      {std::make_shared<Smiley_Component>(":\\hello:-] :{World:-[ :/ :) :-\\hello:] :-{World:[ :-/ :-)"),
        std::make_shared<Top_Ten_Component>("There are thousands of five-letter words in the English dictionary, but it only takes one to win Wordle. Whether it’s your first time playing, or you’re a seasoned Wordler who plays at midnight when a new word drops, these tips will help you build a strategy or improve upon one you’ve already created. Let’s get started.")};
 
     Input_filter filter(vm["console"].as<bool>(),
