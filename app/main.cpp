@@ -35,7 +35,7 @@ class Smiley_Component : public Component {
   }
   
   std::optional<std::vector<int>> compute_start_pos_smileys() const {
-    std::regex rx("[:][-]?[\\/\\[\\]{}\\(\\)]");    
+    std::regex rx("[:][-]?[\\/\\[\\]\\\\{}\\(\\)]");    
     std::vector<int> index_matches;
 
     for(auto it = std::sregex_iterator(m_text.begin(), m_text.end(), rx);
@@ -158,8 +158,8 @@ int main(int argc, const char* argv[])
 
     //step 2 apply algorithm
     std::vector<std::shared_ptr<Component>> components =
-      {std::make_shared<Smiley_Component>("hello:-] World:-]"),
-       std::make_shared<Top_Ten_Component>("hello :-] Top :-] Ten")};
+      {std::make_shared<Smiley_Component>(":\\hello:-] :{World:-[ :/ :)"),
+       std::make_shared<Top_Ten_Component>("There are thousands of five-letter words in the English dictionary, but it only takes one to win Wordle. Whether it’s your first time playing, or you’re a seasoned Wordler who plays at midnight when a new word drops, these tips will help you build a strategy or improve upon one you’ve already created. Let’s get started.")};
 
     Input_filter filter(vm["console"].as<bool>(),
 			std::filesystem::path(vm["simple"].as<std::string>()),
