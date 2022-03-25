@@ -1,13 +1,11 @@
 #include <boost/program_options.hpp>
-#include <iostream>
+#include <boost/algorithm/string.hpp>
 #include <string>
 #include <filesystem>
 #include <vector>
 #include <memory>
 #include <regex>
-#include <boost/algorithm/string.hpp>
-//#include <ranges>
-//#include <string_view>
+#include <iostream>
 
 using namespace boost::program_options;
 
@@ -38,7 +36,7 @@ class Smiley_Component : public Component {
   }
   
   std::optional<std::vector<int>> compute_start_pos_smileys() const {
-    std::regex rx("[:][-]?[\\/\\[\\]\\\\{}\\(\\)]");    
+    std::regex rx("[:;][-]?[\\/\\[\\]\\\\{}\\(\\)]");   
     std::vector<int> index_matches;
 
     for(auto it = std::sregex_iterator(m_text.begin(), m_text.end(), rx);
@@ -46,9 +44,9 @@ class Smiley_Component : public Component {
 	++it)
       {
 	index_matches.push_back(it->position());
-	std::cout << " " << std::to_string(it->position());
+	//std::cout << " " << std::to_string(it->position());
       }
-    std::cout << "\n";
+    //std::cout << "\n";
 
     if(index_matches.empty())
       return  std::nullopt;
@@ -65,13 +63,13 @@ class Top_Ten_Component : public Component {
   std::map<int, std::vector<std::string>, std::greater<int>> compute_top_ten_words() const {
     std::map<std::string, int> duplicate;
     std::map<int, std::vector<std::string>, std::greater<int>> score_list;
-    std::vector<std::string> results;
-    boost::split(results, m_text, boost::is_any_of("\t \n"));
+    std::vector<std::string> word_list;
+    boost::split(word_list, m_text, boost::is_any_of("\t \n"));
     // for c++ 20
     // auto splitText = m_text | view::split(' ') | ranges::to<std::vector<std::string>>();
-    std::sort(std::begin(results),std::end(results));
+    std::sort(std::begin(word_list),std::end(word_list));
 
-    for(std::string word : results)
+    for(std::string word : word_list)
         ++duplicate[word];
     
     for(auto [key, value] : duplicate)
@@ -183,14 +181,10 @@ int main(int argc, const char* argv[])
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
 
-    if (vm.count("help"))
+    if (vm.count("help")){
       std::cout << desc << '\n';
-    if (vm.count("console"))
-      std::cout << "console: " << vm["console"].as<bool>() << '\n';
-    if (vm.count("simple"))
-      std::cout << "simple: " << vm["simple"].as<std::string>() << '\n';
-    if (vm.count("xml"))
-      std::cout << "xml: " << vm["xml"].as<std::string>() << '\n';
+      return 0;
+    }
     //step 1 read input
     // skipped to test faster
 
