@@ -1,5 +1,4 @@
 # analyzer-project-structure
-
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![Continuous Integration](https://github.com/mauriceAlthoff/analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/mauriceAlthoff/analyzer/actions/workflows/ci.yml)
 
