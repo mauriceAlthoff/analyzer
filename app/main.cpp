@@ -31,7 +31,8 @@ int main(int argc, const char* argv[])
     // skipped to test faster
     cout << "please enter text: \n";
     string input;
-    cin >> input;
+    getline(cin, input);
+    cout << "input:" << input << " \n";
 
     // regular expression to detect smileys
     regex rex("[:;][-]?[\\/\\[\\]\\\\{}\\(\\)]");
