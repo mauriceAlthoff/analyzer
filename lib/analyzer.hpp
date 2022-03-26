@@ -135,5 +135,13 @@ private:
   std::filesystem::path m_path_xml;
 };
 
-void client_code(const std::vector<std::shared_ptr<Component>>& components,
-		 std::shared_ptr<Visitor> visitor);
+/**
+ * compute visitor operations over any set of elements without
+ * figuring out their concrete classes. The accept operation directs a call to
+ * the appropriate operation in the visitor object.
+ *
+ * @param[in] component list
+ * @param[in] visitor that compute all components
+ */
+void compute_visitor(const std::vector<std::shared_ptr<Component>>& components,
+		     std::shared_ptr<Visitor> visitor);
