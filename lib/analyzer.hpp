@@ -79,7 +79,7 @@ class Top_Ten_Component : public Component {
 };
 
 /**
- * implementation of an Visitors, it implements an output to an file, which works 
+ * implementation of an Visitors, it implements an output to an ostream, which works 
  * with all component classes.
  */
 class Simple_Output : public Visitor {
@@ -90,7 +90,7 @@ class Simple_Output : public Visitor {
 };
 
 /**
- * implementation of an Visitors, it implements an output to an xml file, which works 
+ * implementation of an Visitors, it implements an xml output to an ostream, which works 
  * with all component classes.
  */
 class Xml_Output : public Visitor {
