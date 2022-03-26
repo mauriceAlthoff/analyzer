@@ -82,6 +82,12 @@ The resulting artifacts are to be found in the `build` folder:
  * the application's executable `build/app/bin/analyzer_run` 
  * the tests executable `build/test/bin/analyzer_test`
 
+...
+
+build/app/bin/analyzer_run --console on  --simple output.txt --xml output.xml
+
+```
+
 ### Tests
 
 Run the tests using 

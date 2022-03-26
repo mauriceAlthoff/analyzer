@@ -52,7 +52,6 @@ std::map<int, std::vector<std::string>, std::greater<int>> Top_Ten_Component::co
                         std::ptr_fun<int, int>(&std::ispunct)  
                        );
   std::regex_replace(no_punct_text, m_rex, " ");
-  //std::cout  << "no_punct_text: "  << no_punct_text << std::endl;
   boost::split(word_list, no_punct_text, boost::is_any_of("\t \n"), boost::token_compress_on);
   // for c++ 20
   // auto splitText = m_text | view::split(' ') | ranges::to<std::vector<std::string>>();
@@ -133,8 +132,6 @@ Input_filter::Input_filter(bool console, const std::filesystem::path& path_simpl
   if(!m_path_xml.empty()){
     m_xml_output = true;
   }
-
-  std::cout << "If: " << m_console_output << "," << m_simple_output << "," << m_xml_output<<'\n';
 }
 
 void client_code(const std::vector<std::shared_ptr<Component>>& components,
