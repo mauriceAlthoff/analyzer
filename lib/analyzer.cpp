@@ -48,7 +48,7 @@ std::map<int, std::vector<std::string>, std::greater<int>> Top_Ten_Component::co
                         std::back_inserter(no_punct_text), //Store output           
                         std::ptr_fun<int, int>(&std::ispunct)  
                        );
-  std::regex_replace(no_punct_text, std::regex("[:;][-]?[\\/\\[\\]\\\\{}\\(\\)]"), " ");
+  std::regex_replace(no_punct_text, std::regex("[:;][-]?[\\/\\[\\]\\\\{}\\(\\)]"), "");
   
   boost::split(word_list, no_punct_text, boost::is_any_of("\t \n"));
   // for c++ 20
@@ -113,7 +113,6 @@ void XmlOutput::output_start_pos_smileys(const std::shared_ptr<Smiley_Component>
 void XmlOutput::output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const {
   auto top_ten_list = element->compute_top_ten_words();
   std::cout << "<top_ten>" << std::endl;  
-  //std::cout << "<?xml version="1.0" encoding="UTF-8"?>\n";
   for(auto [count, words]: top_ten_list){
     std::cout << "<item value=" << count << ">";
     for (auto i: words) {std::cout << "<word>" << i << "</word>";}

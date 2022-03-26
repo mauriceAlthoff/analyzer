@@ -27,11 +27,12 @@ int main(int argc, const char* argv[])
     }
     //step 1 read input
     // skipped to test faster
+    std::string test_text = ":\\hello:-] :{World:-[ :/ :) :-\\hello:] :-{World:[ :-/ :-) There are thousands of five-letter words in the English dictionary, but it only takes one to win Wordle. Whether it’s your first time playing, or you’re a seasoned Wordler who plays at midnight when a new word drops, these tips will help you build a strategy or improve upon one you’ve already created. Let’s get started.";
 
     //step 2 apply algorithm
     std::vector<std::shared_ptr<Component>> components =
-      {std::make_shared<Smiley_Component>(":\\hello:-] :{World:-[ :/ :) :-\\hello:] :-{World:[ :-/ :-)"),
-       std::make_shared<Top_Ten_Component>(":\\hello:-] :{World:-[ :/ :) :-\\hello:] :-{World:[ :-/ :-) There are thousands of five-letter words in the English dictionary, but it only takes one to win Wordle. Whether it’s your first time playing, or you’re a seasoned Wordler who plays at midnight when a new word drops, these tips will help you build a strategy or improve upon one you’ve already created. Let’s get started.")};
+      {std::make_shared<Smiley_Component>(test_text),
+       std::make_shared<Top_Ten_Component>(test_text)};
 
     Input_filter filter(vm["console"].as<bool>(),
 			std::filesystem::path(vm["simple"].as<std::string>()),
@@ -47,6 +48,7 @@ int main(int argc, const char* argv[])
       ClientCode(components, visitor2);
     }
     if (filter.m_xml_output){
+      std::cout << "<?xml version="1.0" encoding="UTF-8"?>\n";
       auto visitor3 = std::make_shared<XmlOutput>();
       ClientCode(components, visitor3);
     }
