@@ -1,10 +1,8 @@
 #include <boost/program_options.hpp>
-#include <boost/algorithm/string.hpp>
 #include "analyzer.hpp"
 #include <filesystem>
 #include <vector>
 #include <memory>
-#include <regex>
 #include <iostream>
 
 using namespace boost::program_options;
@@ -33,7 +31,7 @@ int main(int argc, const char* argv[])
     //step 2 apply algorithm
     std::vector<std::shared_ptr<Component>> components =
       {std::make_shared<Smiley_Component>(":\\hello:-] :{World:-[ :/ :) :-\\hello:] :-{World:[ :-/ :-)"),
-       std::make_shared<Top_Ten_Component>("There are thousands of five-letter words in the English dictionary, but it only takes one to win Wordle. Whether it’s your first time playing, or you’re a seasoned Wordler who plays at midnight when a new word drops, these tips will help you build a strategy or improve upon one you’ve already created. Let’s get started.")};
+       std::make_shared<Top_Ten_Component>(":\\hello:-] :{World:-[ :/ :) :-\\hello:] :-{World:[ :-/ :-) There are thousands of five-letter words in the English dictionary, but it only takes one to win Wordle. Whether it’s your first time playing, or you’re a seasoned Wordler who plays at midnight when a new word drops, these tips will help you build a strategy or improve upon one you’ve already created. Let’s get started.")};
 
     Input_filter filter(vm["console"].as<bool>(),
 			std::filesystem::path(vm["simple"].as<std::string>()),
