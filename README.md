@@ -50,8 +50,6 @@ build_type=Release
 compiler=apple-clang
 compiler.libcxx=libc++
 compiler.version=12.0
-os=Macos
-os_build=Macos
 [options]
 [build_requires]
 [env]

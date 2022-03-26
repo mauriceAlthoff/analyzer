@@ -36,22 +36,22 @@ int main(int argc, const char* argv[])
       {std::make_shared<Smiley_Component>(test_text,rex),
        std::make_shared<Top_Ten_Component>(test_text,rex)};
 
-    Input_filter filter(vm["console"].as<bool>(),
-			std::filesystem::path(vm["simple"].as<std::string>()),
-			std::filesystem::path(vm["xml"].as<std::string>()));
+    Options options(vm["console"].as<bool>(),
+		    std::filesystem::path(vm["simple"].as<std::string>()),
+		    std::filesystem::path(vm["xml"].as<std::string>()));
 
     //step 3 generate output
-    if (filter.m_console_output){
+    if (options.with_console_output()){
       auto visitor1 = std::make_shared<Standard_Output>(std::cout);
       client_code(components, visitor1);
     }
-    if (filter.m_simple_output){
-      std::ofstream out(filter.m_path_simple, std::ios::out | std::ios::trunc);
+    if (options.with_simple_output()){
+      std::ofstream out(options.get_simple_path(), std::ios::out | std::ios::trunc);
       auto visitor2 = std::make_shared<Simple_Output>(out);
       client_code(components, visitor2);
     }
-    if (filter.m_xml_output){
-      std::ofstream out(filter.m_path_xml, std::ios::out | std::ios::trunc);
+    if (options.with_xml_output()){
+      std::ofstream out(options.get_xml_path(), std::ios::out | std::ios::trunc);
       out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
       auto visitor3 = std::make_shared<Xml_Output>(out);
       client_code(components, visitor3);

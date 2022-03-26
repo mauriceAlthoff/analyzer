@@ -42,7 +42,8 @@ void Top_Ten_Component::compute(std::shared_ptr<Visitor> visitor) const {
   visitor->output_top_ten_words(std::make_shared<Top_Ten_Component> (m_text, m_rex));
 }
   
-std::map<int, std::vector<std::string>, std::greater<int>> Top_Ten_Component::compute_top_ten_words() const {
+std::optional<std::map<int, std::vector<std::string>, std::greater<int>>>
+Top_Ten_Component::compute_top_ten_words() const {
   std::map<std::string, int> duplicate;
   std::map<int, std::vector<std::string>, std::greater<int>> score_list;
   std::vector<std::string> word_list;
@@ -63,68 +64,78 @@ std::map<int, std::vector<std::string>, std::greater<int>> Top_Ten_Component::co
   for(auto [key, value] : duplicate)
     score_list[value].push_back(key);
 
-  return score_list;
+  if(score_list.empty())
+    return  std::nullopt;
+  return std::optional<std::map<int, std::vector<std::string>, std::greater<int>>>(score_list);
 }
 
 void Standard_Output::output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const {
-  auto result = element->compute_start_pos_smileys();
-  if(result.has_value())
-    m_out << "Standard smiley count: " << result->size() << std::endl;
+  auto pos_list = element->compute_start_pos_smileys();
+  if(pos_list.has_value())
+    m_out << "Standard smiley count: " << pos_list->size() << std::endl;
 }
 
 void Standard_Output::output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const {
   auto top_ten_list = element->compute_top_ten_words();
-  for(auto [count, words]: top_ten_list){
-    m_out << count << " times: ";
-    for (auto i: words) {m_out << i << " ";}
-    m_out << "\n";
+  if(top_ten_list.has_value()){
+    for(auto [count, words]: top_ten_list.value()){
+      m_out << count << " times: ";
+      for (auto i: words) {m_out << i << " ";}
+      m_out << "\n";
+    }
   }
-
   m_out << "Standard Output\n";
 }
 
 
 void Simple_Output::output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const {
-  auto result = element->compute_start_pos_smileys();
-  if(result.has_value())
-    m_out << "Simple smiley count: " << result->size() << std::endl;
+  auto pos_list = element->compute_start_pos_smileys();
+  if(pos_list.has_value())
+    m_out << "Simple smiley count: " << pos_list->size() << std::endl;
 }
 
 void Simple_Output::output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const {
   auto top_ten_list = element->compute_top_ten_words();
-  for(auto [count, words]: top_ten_list){
-    m_out << count << " times: ";
-    for (auto i: words) {m_out << i << " ";}
-    m_out << "\n";
+  if(top_ten_list.has_value()){
+    for(auto [count, words]: top_ten_list.value()){
+      m_out << count << " times: ";
+      for (auto i: words) {m_out << i << " ";}
+      m_out << "\n";
+    }
   }
-
   m_out << "Simple Output\n";
 }
 
 void Xml_Output::output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const {
-  auto result = element->compute_start_pos_smileys();
-  m_out << "<smiley_list>" << std::endl;  
-  if(result.has_value()){
-    for (auto i: result.value()){
-      m_out << "<pos>" <<i << "</pos>"<< std::endl;
+  auto pos_list = element->compute_start_pos_smileys();
+  if(pos_list.has_value()){
+    m_out << "<smiley_list>" << std::endl;  
+    for (auto pos: pos_list.value()){
+      m_out << "<pos>" << pos << "</pos>"<< std::endl;
     }
+    m_out << "</smiley_list>"<< std::endl;
   }
-  m_out << "</smiley_list>"<< std::endl;
 }
 
 void Xml_Output::output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const {
   auto top_ten_list = element->compute_top_ten_words();
-  m_out << "<top_ten>" << std::endl;  
-  for(auto [count, words]: top_ten_list){
-    m_out << "<item value=" << count << ">";
-    for (auto i: words) {m_out << "<word>" << i << "</word>";}
-    m_out << "</item>\n";
+  if(top_ten_list.has_value()){
+    m_out << "<top_ten>" << std::endl;  
+    for(auto [count, words]: top_ten_list.value()){
+      m_out << "<item value=" << count << ">";
+      for (auto i: words) {m_out << "<word>" << i << "</word>";}
+      m_out << "</item>\n";
+    }
+    m_out << "</top_ten>"<< std::endl;
   }
-  m_out << "</top_ten>"<< std::endl;
 }
 
-Input_filter::Input_filter(bool console, const std::filesystem::path& path_simple, const std::filesystem::path& path_xml)
-  : m_console_output(console),m_path_simple(path_simple), m_path_xml(path_xml)
+Options::Options(bool console,
+		 const std::filesystem::path& path_simple,
+		 const std::filesystem::path& path_xml)
+  : m_console_output(console),
+    m_path_simple(path_simple),
+    m_path_xml(path_xml)
 {
   if(!m_path_simple.empty()){
     m_simple_output = true;
