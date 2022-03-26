@@ -3,54 +3,62 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <regex>
 
 class Smiley_Component;
 class Top_Ten_Component;
 
 class Visitor {
  public:
+  Visitor(std::ostream& out):m_out(out){}
   virtual void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const = 0;
   virtual void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const = 0;
+protected:
+  std::ostream& m_out;
 };
 
 class Component {
  public:
-  Component(const std::string& text):m_text(text){}
+  Component(const std::string& text, std::regex rex);
   virtual ~Component() {}
   virtual void compute(const std::shared_ptr<Visitor> visitor) const = 0;
   const std::string& get_text() const{return m_text;}
 protected:
-  std::string m_text;  
+  std::string m_text;
+  std::regex m_rex;
 };
 
 class Smiley_Component : public Component {
  public:
-  Smiley_Component(const std::string& text);
+  Smiley_Component(const std::string& text, std::regex m_rex);
   void compute(std::shared_ptr<Visitor> visitor) const override;  
   std::optional<std::vector<int>> compute_start_pos_smileys() const;
     };
 
 class Top_Ten_Component : public Component {
  public:
-  Top_Ten_Component(const std::string& text);
+  Top_Ten_Component(const std::string& text, std::regex m_rex);
   void compute(std::shared_ptr<Visitor> visitor) const override;
   std::map<int, std::vector<std::string>, std::greater<int>> compute_top_ten_words() const;
 };
 
-class StandarOutput : public Visitor {
+class Standard_Output : public Visitor {
  public:
+  Standard_Output(std::ostream& out):Visitor(out){}
   void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override;
   void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override;
 };
 
-class SimpleOutput : public Visitor {
+class Simple_Output : public Visitor {
  public:
+  Simple_Output(std::ostream& out):Visitor(out){}
   void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override;
   void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override;
 };
 
-class XmlOutput : public Visitor {
+class Xml_Output : public Visitor {
  public:
+  Xml_Output(std::ostream& out):Visitor(out){}
   void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override;
   void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override;
 };
@@ -67,5 +75,5 @@ public:
   std::filesystem::path m_path_xml;
 };
 
-void ClientCode(const std::vector<std::shared_ptr<Component>>& components,
-		std::shared_ptr<Visitor> visitor);
+void client_code(const std::vector<std::shared_ptr<Component>>& components,
+		 std::shared_ptr<Visitor> visitor);
