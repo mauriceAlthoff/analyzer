@@ -44,23 +44,23 @@ void Top_Ten_Component::compute(std::shared_ptr<Visitor> visitor) const {
   
 std::optional<std::map<int, std::vector<std::string>, std::greater<int>>>
 Top_Ten_Component::compute_top_ten_words() const {
-  std::map<std::string, int> duplicate;
-  std::map<int, std::vector<std::string>, std::greater<int>> score_list;
-  std::vector<std::string> word_list;
   std::string no_punct_text;
   std::remove_copy_if(m_text.begin(), m_text.end(),            
                         std::back_inserter(no_punct_text), //Store output           
                         std::ptr_fun<int, int>(&std::ispunct)  
                        );
   std::regex_replace(no_punct_text, m_rex, " ");
+  std::vector<std::string> word_list;
   boost::split(word_list, no_punct_text, boost::is_any_of("\t \n"), boost::token_compress_on);
   // for c++ 20
   // auto splitText = m_text | view::split(' ') | ranges::to<std::vector<std::string>>();
   std::sort(std::begin(word_list),std::end(word_list));
 
+  std::map<std::string, int> duplicate;
   for(std::string word : word_list)
     ++duplicate[word];
     
+  std::map<int, std::vector<std::string>, std::greater<int>> score_list;
   for(auto [key, value] : duplicate)
     score_list[value].push_back(key);
 
