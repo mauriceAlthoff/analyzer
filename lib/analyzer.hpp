@@ -79,17 +79,6 @@ class Top_Ten_Component : public Component {
 };
 
 /**
- * implementation of an Visitors, it implements an output to standard output, which
- * works with all component classes.
- */
-class Standard_Output : public Visitor {
- public:
-  Standard_Output(std::ostream& out):Visitor(out){}
-  void output_start_pos_smileys(const std::shared_ptr<Smiley_Component> element) const override;
-  void output_top_ten_words(const std::shared_ptr<Top_Ten_Component> element) const override;
-};
-
-/**
  * implementation of an Visitors, it implements an output to an file, which works 
  * with all component classes.
  */

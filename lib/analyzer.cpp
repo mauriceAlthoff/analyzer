@@ -71,29 +71,15 @@ Top_Ten_Component::compute_top_ten_words() const {
   return optional<map<int, vector<string>, greater<int>>>(score_list);
 }
 
-void Standard_Output::output_start_pos_smileys(const shared_ptr<Smiley_Component> element) const {
-  auto pos_list = element->compute_start_pos_smileys();
-  if(pos_list.has_value())
-    m_out << "Standard smiley count: " << pos_list->size() << endl;
-}
-
-void Standard_Output::output_top_ten_words(const shared_ptr<Top_Ten_Component> element) const {
-  auto top_ten_list = element->compute_top_ten_words();
-  if(top_ten_list.has_value()){
-    for(auto [count, words]: top_ten_list.value()){
-      m_out << count << " times: ";
-      for (auto i: words) {m_out << i << " ";}
-      m_out << "\n";
-    }
-  }
-  m_out << "Standard Output\n";
-}
-
-
 void Simple_Output::output_start_pos_smileys(const shared_ptr<Smiley_Component> element) const {
   auto pos_list = element->compute_start_pos_smileys();
-  if(pos_list.has_value())
-    m_out << "Simple smiley count: " << pos_list->size() << endl;
+  if(pos_list.has_value()){
+    m_out << "smiley_list position:" << endl;  
+    for (auto pos: pos_list.value()){
+      m_out << pos << ",";
+    }
+    m_out << endl;
+  }
 }
 
 void Simple_Output::output_top_ten_words(const shared_ptr<Top_Ten_Component> element) const {
