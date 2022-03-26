@@ -55,9 +55,11 @@ int main(int argc, const char* argv[])
     }
     
     if (options.with_xml_output()){
-      std::ofstream out(options.get_xml_path(), std::ios::out | std::ios::trunc);
+      std::ofstream out(options.get_xml_path(),
+			std::ios::out | std::ios::trunc);
       out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-      client_code(components, std::make_shared<Xml_Output>(out));
+      client_code(components,
+		  std::make_shared<Xml_Output>(out));
     }
   } catch (const error& ex) {
     std::cerr << ex.what() << '\n';
