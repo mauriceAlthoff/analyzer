@@ -82,7 +82,7 @@ The resulting artifacts are to be found in the `build` folder:
  * the application's executable `build/app/bin/analyzer_run` 
  * the tests executable `build/test/bin/analyzer_test`
 
-...
+```bash
 
 build/app/bin/analyzer_run --console on  --simple output.txt --xml output.xml
 
@@ -195,7 +195,7 @@ Remove the buiding artifacts using
 ```bash
 $ make dckr-clean
 docker-compose run --rm analyzer clean
-Creating analyzer        _run ... done
+Creating analyzer_run         ... done
 ```
 
 ### Code formatting
