@@ -2,6 +2,12 @@
 
 #include "analyzer.hpp"
 
+TEST_CASE("Test with zero", "[classic]")
+{
+  
+   REQUIRE(0 == 0);
+}
+
 SCENARIO("Dummy section")
 {
     GIVEN("Nothing")
