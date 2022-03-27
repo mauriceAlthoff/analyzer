@@ -45,7 +45,7 @@ function app-build
         mkdir -p "${BUILD_DIR}"
         cd "${BUILD_DIR}"
 
-        conan install .. --build=missing
+        conan install .. --build=missing -s compiler.libcxx=libstdc++11
         cmake ..
         make -j
     )
