@@ -17,6 +17,7 @@ int main(int argc, const char* argv[])
         //step 0 parse arguments
         desc.add_options()("help,h", "Help screen")("console", value<bool>()->default_value(false), "console output")("simple", value<string>()->default_value(""), "simple text output")("xml", value<string>()->default_value(""), "xml file Output");
 
+	// !linksto req 3 parse input parameters
         store(parse_command_line(argc, argv, desc), vm);
 
         if (vm.count("help")) {
@@ -28,7 +29,6 @@ int main(int argc, const char* argv[])
     }
 
     //step 1 read input
-    // skipped to test faster
     cout << "please enter text: \n";
     string input;
     getline(cin, input);
@@ -37,26 +37,31 @@ int main(int argc, const char* argv[])
     // regular expression to detect smileys
     regex rex("[:;][-]?[\\/\\[\\]\\\\{}\\(\\)]");
     //step 2 apply algorithms
-    vector<shared_ptr<Component>> components = { make_shared<Smiley_Component>(input, rex),
+    // !linksto req 1 compute start position of smileys
+    // !linksto req 2 compute top 10 used words
+    vector<shared_ptr<Component>> components =
+      { make_shared<Smiley_Component>(input, rex),
         make_shared<Top_Ten_Component>(input, rex) };
 
+    // store options
     Options options(vm["console"].as<bool>(),
         filesystem::path(vm["simple"].as<string>()),
         filesystem::path(vm["xml"].as<string>()));
 
     //step 3 generate output
+    // !linksto req 3.1 console ouptput
     if (options.with_console_output()) {
         compute_visitor(components,
             make_shared<Simple_Output>(cout));
     }
-
+    // !linksto req 3.2 storing to file
     if (options.with_simple_output()) {
         ofstream out(options.get_simple_path(),
             ios::out | ios::trunc);
         compute_visitor(components,
             make_shared<Simple_Output>(out));
     }
-
+    // !linksto req 3.3 storing to xml formatted file
     if (options.with_xml_output()) {
         ofstream out(options.get_xml_path(),
             ios::out | ios::trunc);

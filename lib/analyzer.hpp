@@ -65,7 +65,7 @@ protected:
  */
 class Smiley_Component : public Component {
 public:
-    Smiley_Component(const std::string& text, std::regex m_rex);
+    Smiley_Component(const std::string& text, std::regex rex);
     void compute(std::shared_ptr<Visitor> visitor) const override;
     std::optional<std::vector<int>> compute_start_pos_smileys() const;
 };
@@ -78,7 +78,7 @@ public:
  */
 class Top_Ten_Component : public Component {
 public:
-    Top_Ten_Component(const std::string& text, std::regex m_rex);
+    Top_Ten_Component(const std::string& text, std::regex rex);
     void compute(std::shared_ptr<Visitor> visitor) const override;
     std::optional<std::map<int, std::vector<std::string>, std::greater<int>>> compute_top_ten_words() const;
 };

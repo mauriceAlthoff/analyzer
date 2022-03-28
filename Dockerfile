@@ -8,11 +8,15 @@ ENV     CXX=clang++
 
 RUN     apt-get update                                              \
         && apt-get install --yes --quiet --no-install-recommends    \
+	    build-essential                                         \
             clang                                                   \
             clang-format                                            \
             cmake                                                   \
             make                                                    \
-            python3-pip                                             \
+	    lcov                                                    \
+	    gcovr                                                   \
+	    xdg-utils                                               \
+	    python3-pip                                             \
         && pip install                                              \
             conan                                                   \
         && rm -rf /var/lib/apt/lists/*
